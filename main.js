@@ -66,36 +66,25 @@ function populate(fetchedData){
     predictions.innerHTML += '<h2>'+i+'</h2>';
   }
   function createCSVTable(fetchedData) {
-    // Get the table element
     const table = document.getElementById('csv-table');
 
-    // Clear any existing content in the table
     table.innerHTML = '';
 
-    // Split the CSV data into rows
     const rows = fetchedData['game'].split('\n');
 
-    // Loop through each row
     rows.forEach((row, rowIndex) => {
-        // Create a new table row
         const tr = document.createElement('tr');
 
-        // Split the row into cells
         const cells = row.split(',');
 
-        // Loop through each cell
         cells.forEach((cell, cellIndex) => {
-            // Create a new table cell
-            const td = document.createElement(rowIndex === 0 ? 'th' : 'td'); // Use <th> for the header row
+            const td = document.createElement(rowIndex === 0 ? 'th' : 'td');
 
-            // Set the cell's text content
             td.textContent = cell.trim();
 
-            // Append the cell to the row
             tr.appendChild(td);
         });
 
-        // Append the row to the table
         table.appendChild(tr);
     });
 }
