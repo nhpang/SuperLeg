@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hack4n</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="monkey.js"></script>
+  </head>
+  <body>
+
+    <div class = search>
+      <input
+        id="search"
+        placeholder="search nba player"
+      />
+      <button onclick="search(document.getElementById('search').value)" class="btn btn-success mb-3">
+        Search
+      </button>
+      <div id = loading>
+        <p>Loading...</p>
+      </div>
+      <div id = error>
+        <p>This player has not recorded a game since 2023</p>
+      </div>
+    </div>
+
+    <div class = main>
+        <div class=left>
+          <h1 id="intro">Enter the first and last name of any current NBA player</h1>
+          <div class="left1">
+
+          </div>
+          <div class="left2">
+
+          </div>
+        </div>
+        <div class=right>
+            <div class=up>
+
+            </div>
+            <div class=down>
+
+            </div>
+
+        </div>
+    </div>
+  </body>
+</html>

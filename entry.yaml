@@ -1,0 +1,28 @@
+openapi: 3.0.0
+info:
+  title: Simple API
+  version: 1.0.0
+
+paths:
+  /stats:
+    post:
+      operationId: pekka.get_stats
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                yog:
+                  type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
