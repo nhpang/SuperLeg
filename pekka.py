@@ -12,17 +12,18 @@ def stats():
     data = request.json
 
     name = data['name']
-    game, img, player = games(name)
+    game, img, player, accolades = games(name)
     average=averages(game)
     predict=prediction(game)
-    game, img, player = games(name)
+    game, img, player, accolades = games(name)
 
     return jsonify({
         'game': game.to_csv(),
         'average': average,
         'prediction': predict,
         'image': f'{img}',
-        'player': f'{player}'
+        'player': f'{player}',
+        'accolades': f'{accolades}'
     })
     
 
@@ -80,8 +81,13 @@ def games(name):
         
         img_tag = soup.find_all('img')
         name = soup.find('h1')
+
+        accolades = ""
+    for li in soup.find_all('li', class_=['poptip', 'all_star']):
+        accolades += li.get_text(strip=True) + ", "
+    accolades = accolades[:-2]
     
-    return games, img_tag[1], name
+    return games, img_tag[1], name, accolades
 
 def averages(game):
     points = pd.to_numeric(game['PTS'], errors='coerce').mean()

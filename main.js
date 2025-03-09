@@ -37,6 +37,9 @@ function populate(fetchedData){
   const image = document.querySelector('.left1');
   image.innerHTML = ''; 
 
+  // const textpart = document.querySelector('.about');
+  // textpart.innerHTML = ''; 
+
   const name = document.querySelector('.left1');
   name.innerHTML = ''; 
 
@@ -52,7 +55,8 @@ function populate(fetchedData){
   
 
   image.innerHTML += fetchedData['image'];
-  name.innerHTML += '<h1>'+fetchedData['player'].split('2')[0]+'</h1>'
+
+  image.innerHTML += '<div><h1>'+fetchedData['player'].split('2')[0]+'</h1><p>'+fetchedData['accolades']+'</p></div>'
   
   tabledata.innerHTML += '<table id="csv-table" border="1"></table>';
 
@@ -61,7 +65,7 @@ function populate(fetchedData){
     averages.innerHTML += '<h2>'+i+'</h2>';
   }
 
-  predictions.innerHTML += '<h1>Next Game predictions</h1>';
+  predictions.innerHTML += '<h1>Next Game Predictions</h1>';
   for (let i of fetchedData['prediction']) {
     predictions.innerHTML += '<h2>'+i+'</h2>';
   }
