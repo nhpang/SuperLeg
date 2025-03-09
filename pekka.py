@@ -25,53 +25,53 @@ def stats():
         'player': f'{player}',
         'accolades': f'{accolades}'
     })
-    
 
 def games(name):
     first =name.split(" ")[0].lower()
     last =name.split(" ")[1].lower()
-
-    url = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}01/gamelog/2024#pgl_basic"
-    
     try:
-        tables = pd.read_html(url)
+        url = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}01/gamelog/2025#pgl_basic"
+        table25 = pd.read_html(url)
+        game25=table25[7]
+        try:
+            url = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}01/gamelog/2024#pgl_basic"
+            table24 = pd.read_html(url)
+            game24=table24[7]
 
-        games = tables[7]
+            games = pd.concat([game24, game25], axis=0).reset_index(drop=True)
+            games = games.iloc[::-1].reset_index(drop=True)
 
+        except:
+            return 1
+        
         games = games.loc[:, ['Date', 'Tm', 'Opp', 'Unnamed: 7', 'PTS', 'AST','TRB', 'BLK', 'STL', '+/-', 
                         'FG', 'FGA', 'FG%', '3P', '3PA', '3P%', 'FT', 'FTA', 'FT%']]
 
         games.rename(columns={'Unnamed: 7': 'Result'}, inplace=True)
-        games = games[~games.isin(['Inactive']).any(axis=1)]
-        games = games[~games.isin(['Did Not Play']).any(axis=1)]
-        games = games[~games.isin(['Did Not Dress']).any(axis=1)]
-        games = games[~games.isin(['PTS']).any(axis=1)]
+        games = games[~games.isin(['Inactive','Did Not Play','Did Not Dress','PTS','Not With Team']).any(axis=1)]
+
     except:
-        print('oops')
+        print('2')
+        url = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}02/gamelog/2025#pgl_basic"
+        table25 = pd.read_html(url)
+        game25=table25[7]
+        try:
+            url = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}02/gamelog/2024#pgl_basic"
+            table24 = pd.read_html(url)
+            game24=table24[7]
 
-    url2 = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}01/gamelog/2025#pgl_basic"
-    
-    tables2 = pd.read_html(url2)
+            games = pd.concat([game24, game25], axis=0).reset_index(drop=True)
+            games = games.iloc[::-1].reset_index(drop=True)
 
-    games2 = tables2[7]
+        except:
+            games = game25
+        
+        finally:
+            games = games.loc[:, ['Date', 'Tm', 'Opp', 'Unnamed: 7', 'PTS', 'AST','TRB', 'BLK', 'STL', '+/-', 
+                        'FG', 'FGA', 'FG%', '3P', '3PA', '3P%', 'FT', 'FTA', 'FT%']]
 
-    games2 = games2.loc[:, ['Date', 'Tm', 'Opp', 'Unnamed: 7', 'PTS', 'AST','TRB', 'BLK', 'STL', '+/-', 
-                      'FG', 'FGA', 'FG%', '3P', '3PA', '3P%', 'FT', 'FTA', 'FT%']]
-
-    games2.rename(columns={'Unnamed: 7': 'Result'}, inplace=True)
-    games2 = games2[~games2.isin(['Inactive']).any(axis=1)]
-    games2 = games2[~games2.isin(['Did Not Play']).any(axis=1)]
-    games2 = games2[~games2.isin(['Did Not Dress']).any(axis=1)]
-    games2 = games2[~games2.isin(['PTS']).any(axis=1)]
-
-
-    try:
-        games = pd.concat([games, games2], axis=0).reset_index(drop=True)
-        games = games.iloc[::-1].reset_index(drop=True)
-    except:
-        games=games2
-        games = games.iloc[::-1].reset_index(drop=True)
-        print('woops')
+            games.rename(columns={'Unnamed: 7': 'Result'}, inplace=True)
+            games = games[~games.isin(['Inactive','Did Not Play','Did Not Dress','PTS','Not With Team']).any(axis=1)]
 
 
     response = requests.get(url)
@@ -125,7 +125,7 @@ def prediction(game, targets=['PTS', 'TRB', 'AST', 'BLK', 'STL']):
         y = game[target]  # Target (we're predicting multiple variables)
         
         # Step 4: Split the data into training and testing sets
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8, shuffle=False)
         
         # Step 5: Initialize and train the model
         model = LinearRegression()
@@ -139,7 +139,7 @@ def prediction(game, targets=['PTS', 'TRB', 'AST', 'BLK', 'STL']):
         predicted_value = model.predict(next_game_features)
         
         predictions.append(target + ': ' +str(round(predicted_value[0])))
-    
+
     return predictions  # Return all predictions as a dictionary
 
 
