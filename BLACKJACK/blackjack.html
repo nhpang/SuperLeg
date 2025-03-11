@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackJack</title>
+    <script src="blackjack.js"></script>
+    <link href="blackjack.css" rel="stylesheet">
+</head>
+<body style="display: flex; flex-direction: column;">
+    <div id="topbar" style="display: flex; align-items: center;">
+        <a href="../home/home.html"><img id="randomPhoto" height="100" style="margin-right: 15px;"></a>
+          
+          <script>
+            const images = [
+              "../home/photos/butler.jpg", 
+              "../home/photos/familyguy.jpg",
+              "../home/photos/psychocat.jpg",
+              "../home/photos/yuup.jpg",
+              "../home/photos/bashscript.jpg", 
+              "../home/photos/bronbron.png", 
+          ];
+
+            const randomImage = images[Math.floor(Math.random() * images.length)];
+
+            document.getElementById("randomPhoto").src = randomImage;
+          </script>
+          <a href="../home/home.html" style="color: black; text-decoration: none; font-size: 25px;">Home</a>
+    </div>
+    <div style="display: flex; flex-direction: row; margin-top: 100px;">
+        <div style="width: 200px; margin: 20px;"></div>
+        <div id="centerpiece">
+            <div class="table">
+                <div class="total"><p id="dtotal"></p></div>
+                <div id="dealer" class="cardpositioning"> </div>
+            </div>
+
+            <div id="titlecard">
+                <p id="title"></p>
+                <p id="balance"></p>
+            </div>
+
+            <div class="table">
+                <div class="total"><p id="ptotal"></p></div>
+                <div id="player" class="cardpositioning"></div>
+            </div>
+        </div>
+
+        <div id="action">
+            <div style="display: flex; flex-direction: column; text-align: center;">
+                <h3 style="margin:5px; font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-style: italic;">Bet Amount</h3>
+                <input type="number" class="betbox" id="bet" value="0" style="margin:0px; background-color: white; font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">
+            </div>    
+            <input type="button" class="buttons" id="restart" value="Start Game" style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-style: italic;">
+            <input type="button" class="buttons" id="hit" value="Hit" style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-style: italic;">
+            <input type="button" class="buttons" id="stand" value="Stand" style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-style: italic;">
+            <input type="button" class="buttons" id="double" value="Double" style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-style: italic;">
+        </div>
+    </div>
+</body>
+</html>

@@ -12,20 +12,23 @@
     <div class = search>
       <div>
         <div style="display: flex; align-items: center; ">
-          <a href="../home/home.html"><img id="randomPhoto" width="60"></a>
+          <a href="../home/home.html"><img id="randomPhoto" height="100"></a>
           
           <script>
             const images = [
-                "../home/photos/familyguy.jpg",
-                "../home/photos/psychocat.jpg",
-                "../home/photos/yuup.jpg"
-            ];
+              "../home/photos/butler.jpg", 
+              "../home/photos/familyguy.jpg",
+              "../home/photos/psychocat.jpg",
+              "../home/photos/yuup.jpg",
+              "../home/photos/bashscript.jpg", 
+              "../home/photos/bronbron.png", 
+          ];
 
             const randomImage = images[Math.floor(Math.random() * images.length)];
 
             document.getElementById("randomPhoto").src = randomImage;
           </script>
-          <a href="../home/home.html" >Home</a>
+          <a href="../home/home.html" style="color: black; text-decoration: none; font-size: 25px;" >Home</a>
         </div>
       </div>
       <div style="display: flex; flex-direction: row; justify-content: center;">
