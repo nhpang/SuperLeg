@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hack4n</title>
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="title">
+
+      <img id="randomPhoto" width="120">
+    
+      <script>
+          const images = [
+              "photos/butler.jpg", 
+              "photos/familyguy.jpg",
+              "photos/psychocat.jpg",
+              "photos/yuup.jpg",
+              "photos/bashscript.jpg", 
+              "photos/bronbron.png", 
+          ];
+
+          const randomImage = images[Math.floor(Math.random() * images.length)];
+
+          document.getElementById("randomPhoto").src = randomImage;
+
+          document.getElementById("randomPhoto").addEventListener("click", function(){
+            let randomImage = images[Math.floor(Math.random() * images.length)];
+            document.getElementById("randomPhoto").src = randomImage;
+          })
+      </script>
+
+      <h1 id="webtitle">na.th4n check it out</h1>
+    </div>
+    <div class="dash">
+      <div class="apps">
+        <div class="appcover">
+          <a href="../stats/stats.html"><img src="brlogo.png" width="100%"></a>
+        </div>
+        <a href="../stats/stats.html">Player Stats</a>
+      </div>
+    </div>
+    
+  </body>
+</html>
