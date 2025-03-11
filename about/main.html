@@ -1,0 +1,159 @@
+<head>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" defer src="https://cdn.jsdelivr.net/gh/imananoosheh/github-contributions-fetch@latest/github_calendar_widget.js"></script>
+</head>
+
+<header>
+    <div class="logo" style="display: flex; flex-direction: row; align-items: center;">
+      <a href="../home/home.html"><img id="randomPhoto" width="60" style="margin-right: 20px;"></a>
+          
+          <script>
+            const images = [
+                "../home/photos/familyguy.jpg",
+                "../home/photos/psychocat.jpg",
+                "../home/photos/yuup.jpg"
+            ];
+
+            const randomImage = images[Math.floor(Math.random() * images.length)];
+
+            document.getElementById("randomPhoto").src = randomImage;
+          </script>
+      <a href="../home/home.html" style="color: white; text-decoration: none;"><h1>Nathan Hacken Pang</h1></a>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="/auth/google">Login</a></li>
+        <li><a href="#about">About Me</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#github">GitHub Contributions</a></li>
+        <li><a href="#albums">Albums</a></li>
+        <li><a href="#contact">Contact</a></li>
+        
+      </ul>
+    </nav>
+  </header>
+
+  <section id="about">
+    <div class="profile">
+      <img src="me.png" alt="me">
+      <div class="bio">
+        <h2>About Me</h2>
+        <p>I am a passionate web developer with a focus on creating dynamic and responsive websites.</p>
+        <h3>Skills</h3>
+        <ul>
+          <li>HTML & CSS</li>
+          <li>JavaScript</li>
+          <li>Python</li>
+          <li>MySQL</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div id="experience">
+    <h2>Education</h2>
+    <div class="experience">
+      <h4>BCIT – Computer Information Technology Diploma</h4>
+      <p>September 2023 - Present</p>
+      <ul>
+        <li>ACIT 3475: Built a web hosting server with Nginx, with additional tools such as load balancing,
+          Google Authentication, and login features</li>
+        <li>ACIT 3910: Developed a MySQL database for a school system to manage students, teachers, and
+          courses, with secure user roles and access control; created views, triggers, and stored procedures to
+          optimize queries and maintain data integrity
+          </li>
+      </ul>
+    </div>
+
+    <div class="experience">
+      <h2>Work Experience</h2>
+      <h4>Food Stand Manager</h4>
+      <p>Tochi Dessert | Richmond and Vancouver, BC</p>
+      <p>May 2023 - Present</p>
+      <ul>
+        <li>Managed business purchases and stock inventory by monitoring inventory levels and ensuring
+          timely restocking to align with business demand</li>
+        <li>Increased profit by 30% by promoting trending items and implementing effective sales strategies
+          </li>
+        <li>
+          Led and organized the work team by designating roles and motivating members to maintain efficiency and enthusiasm during peak hours
+        </li>
+      </ul>
+    </p>
+
+    <div class="experience">
+      <h4>Pharmacy Assistant</h4>
+      <p>Shoppers Drug Mart Pharmacy | Richmond, BC</p>
+      <p>August 2022 - September 2023</p>
+      <ul>
+        <li>Efficiently filled and distributed prescriptions while maintaining patient confidentiality
+          </li>
+        <li>
+          Booked and conducted COVID-19 tests and provided results for patients
+        </li>
+      </ul>
+    </div>
+
+    <div class="experience">
+      <h4>Sales/Stock Associate</h4>
+      <p>Dollarama | Richmond, BC</p>
+      <p>August 2021 - May 2023</p>
+      <ul>
+        <li>Maintain and organize store products by assisting and collaborating with others on product
+          management and placement, ensuring a customer-friendly environment
+          </li>
+        <li>
+          Utilized the POS system to assist customers during self-checkout processes effectively
+        </li>
+      </ul>
+    </div>
+    
+
+    </div>
+  </div>
+
+  <section id="github">
+    <h2>Github Contribution Calendar</h2>
+    <div class="project-card">
+      <div id="calendar-component" username="nhpang"></div>
+    </div> 
+  </section>
+
+  <section id="albums">
+    <h2>My Favourite Albums</h2>
+
+    <div class="albums">
+    <div class="album-card">
+        <img src="https://i.scdn.co/image/ab67616d0000b2733d1996a2dc962e53e12cb7cb" alt="Timeless">
+        <h3>Timless- Kaytranada</h3>
+        <p>DANCE DANCE DANCE ON THE FLOOR!.</p>
+      </div>
+
+    <div class="album-card">
+      <img src="https://media.pitchfork.com/photos/5d15374982ada80008ddf2ca/1:1/w_450%2Cc_limit/CaseStudy_DanielCaesar.jpg" alt="Case study 01">
+      <h3>CASE STUDY 01- Daniel Caesar</h3>
+      <p>SUBMIT, TO ME.  COME GET DOWN ON ONE KNEE. IM YOUR SAVIOUR AND ILL GIVE U EVERYTHING THAT U NEED (THAT YOU NEED).</p>
+    </div>
+
+    <div class="album-card">
+        <img src="https://i.scdn.co/image/ab67616d0000b273173b8975e8a7820da5f1aeb6" alt="Two Star & the Dream Police">
+        <h3>Two Star & the Dream Police- Mk.gee</h3>
+        <p>Come on little luck come on lightniiiiing.</p>
+      </div>
+
+      <div class="album-card">
+        <img src="https://i.scdn.co/image/ab67616d0000b2730c5f23cbf0b1ab7e37d0dc67" alt="Alone at Prom">
+        <h3>Alone at Prom- Tory Lanez</h3>
+        <p>Baby, baby girlll, you feelin me up, fill me with love oh oh</p>
+      </div>
+    
+    </div>
+
+  </section>
+
+  <section id="contact">
+    <h2>Contact Me</h2>
+    <p>Feel free to reach out via email nathanpang51@outlook.com or connect with me on <a href="https://www.linkedin.com/in/nathan-pang-9688ab279/" target="_blank">LinkedIn</a>.</p>
+  </section>
+  
+  

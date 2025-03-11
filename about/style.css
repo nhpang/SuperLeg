@@ -1,0 +1,183 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: rgb(95, 10, 95);
+    color: white;
+    position: fixed;
+    width: 98%; 
+    top: 0;
+    z-index: 1000;
+  }
+  
+  header nav ul {
+    display: flex;
+    list-style: none;
+  }
+  
+  header nav ul li {
+    margin: 0 15px;
+  }
+  
+  header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  
+  header nav ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  #about {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 50px;
+  }
+  
+  #about .profile {
+    display: flex;
+    align-items: center;
+    margin-top: 65px;
+  }
+  
+  #about img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    margin-right: 20px;
+  }
+  
+  #about .bio {
+    max-width: 600px;
+  }
+  
+  #about h2 {
+    font-size: 2rem;
+    color: #333;
+  }
+
+  #projects{
+    padding: 50px;
+    background-color: #f7f7f7;
+  }
+  
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .project-card img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .project-card a {
+    color: #007bff;
+    text-decoration: none;
+    margin-top: 10px;
+  }
+  
+section {
+    padding: 50px;
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  #github {
+    padding: 50px;
+    background-color: #f7f7f7;
+  }
+  
+  #github iframe {
+    margin: 20px 0;
+    border: none;
+    max-width: 80%;
+  }
+  
+  #contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    background-color: #f7f7f7;
+  }
+  
+  #contact p {
+    max-width: 600px;
+    line-height: 1.6;
+  }
+  
+  #contact a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  #contact a:hover {
+    text-decoration: underline;
+  }
+
+  #albums {
+    padding: 50px;
+    background-color: #f7f7f7;
+  }
+
+  .album-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 500px;
+  }
+  
+  .album-card img {
+    width: 300px;
+    height: auto;
+  }
+  
+  .album-card a {
+    color: #007bff;
+    text-decoration: none;
+    margin-top: 10px;
+  }
+  
+  .albums {
+    display: flex;
+  }
+
+  #calendar-component {
+    padding-left: 35px;
+    padding-right: 35px;
+    padding-bottom: 25px;
+  }
+
+#experience{
+  margin-left: 40px;
+  margin-right: 40px;
+  padding: 30px;
+  background-color: rgb(223, 223, 223);
+}
