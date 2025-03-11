@@ -10,11 +10,17 @@ CORS(app)
 @app.route('/stats', methods=['POST'])
 def stats():
     data = request.json
-
     name = data['name']
+
+    print('Gathering player games and information...')
     game, img, player, accolades = games(name)
+
+    print('Calculating player averages...')
     average=averages(game)
+
+    print('Predicting next statline...')
     predict=prediction(game)
+
     game, img, player, accolades = games(name)
 
     return jsonify({
