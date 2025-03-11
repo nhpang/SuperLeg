@@ -6,13 +6,14 @@
     <title>hack4n</title>
     <link href="style.css" rel="stylesheet">
     <script src="main.js"></script>
+    <link rel="icon" type="image/x-icon" href="https://i.scdn.co/image/ab67616d0000b273a875c3ec944b4f164ab5c350">
   </head>
   <body>
 
     <div class = search>
       <div>
         <div style="display: flex; align-items: center; ">
-          <a href="../home/home.html"><img id="randomPhoto" height="100"></a>
+          <a href="../home/home.html"><img id="randomPhoto" height="100px"></a>
           
           <script>
             const images = [
@@ -22,13 +23,14 @@
               "../home/photos/yuup.jpg",
               "../home/photos/bashscript.jpg", 
               "../home/photos/bronbron.png", 
+              "../home/photos/piplup.png", 
           ];
 
             const randomImage = images[Math.floor(Math.random() * images.length)];
 
             document.getElementById("randomPhoto").src = randomImage;
           </script>
-          <a href="../home/home.html" style="color: black; text-decoration: none; font-size: 25px;" >Home</a>
+          <a href="../home/home.html" style="color: black; text-decoration: none; font-size: 25px; margin-left: 15px;" >Home</a>
         </div>
       </div>
       <div style="display: flex; flex-direction: row; justify-content: center;">
@@ -56,7 +58,7 @@
 
     <div class = main>
         <div class=left>
-          <h1 id="intro">Enter the first and last name of any current NBA player</h1>
+          <h1 id="intro" style="margin-top: 20px; text-align: center;">Enter the first and last name of any current NBA player</h1>
           <div class="left1">
           </div>
           <div class="left2">

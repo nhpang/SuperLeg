@@ -56,7 +56,7 @@ function populate(fetchedData){
 
   image.innerHTML += fetchedData['image'];
 
-  image.innerHTML += '<div><h1>'+fetchedData['player'].split('2')[0]+'</h1><p>'+fetchedData['accolades']+'</p></div>'
+  image.innerHTML += '<div style="margin-left: 15px; margin-top: 15px"><h1>'+fetchedData['player'].split('2')[0]+'</h1><p>'+fetchedData['accolades']+'</p></div>'
   
   tabledata.innerHTML += '<table id="csv-table" border="1"></table>';
 

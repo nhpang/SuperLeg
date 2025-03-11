@@ -14,9 +14,13 @@ h2{
     margin: 0px;
 }
 
-.search a {
-    margin: 5px;
+.search img{
+    height: 100px;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
 }
+
 .search{
     width: 100%;
     height: 100px;
