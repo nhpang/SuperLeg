@@ -60,7 +60,7 @@ function populate(fetchedData){
   
   tabledata.innerHTML += '<table id="csv-table" border="1"></table>';
 
-  averages.innerHTML += '<h1>Averages on Recent Games</h1>';
+  averages.innerHTML += '<h1>Averages over Last 2 Years</h1>';
   for (let i of fetchedData['average']) {
     averages.innerHTML += '<h2>'+i+'</h2>';
   }
