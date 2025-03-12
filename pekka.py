@@ -33,72 +33,64 @@ def stats():
     })
 
 def games(name):
-    first =name.split(" ")[0].lower()
-    last =name.split(" ")[1].lower()
-    try:
-        url = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}01/gamelog/2025#pgl_basic"
-        table25 = pd.read_html(url)
-        game25=table25[7]
-        try:
-            url = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}01/gamelog/2024#pgl_basic"
-            table24 = pd.read_html(url)
-            game24=table24[7]
+    from nba_api.stats.endpoints import playergamelog
+    from nba_api.stats.static import players
 
-            games = pd.concat([game24, game25], axis=0).reset_index(drop=True)
-            games = games.iloc[::-1].reset_index(drop=True)
+    # function to convert player name to player id
+    nba_players = players.get_players()
 
-        except:
-            return 1
-        
-        games = games.loc[:, ['Date', 'Tm', 'Opp', 'Unnamed: 7', 'PTS', 'AST','TRB', 'BLK', 'STL', '+/-', 
-                        'FG', 'FGA', 'FG%', '3P', '3PA', '3P%', 'FT', 'FTA', 'FT%']]
+    def get_player_id(player_name):
+        player = next((p for p in nba_players if p['full_name'].lower() == player_name.lower()), None)
+        return player['id'] if player else None
 
-        games.rename(columns={'Unnamed: 7': 'Result'}, inplace=True)
-        games = games[~games.isin(['Inactive','Did Not Play','Did Not Dress','PTS','Not With Team']).any(axis=1)]
+    # get id and search for games of last 2 years
+    player_id = get_player_id(name)
 
-    except:
-        print('2')
-        url = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}02/gamelog/2025#pgl_basic"
-        table25 = pd.read_html(url)
-        game25=table25[7]
-        try:
-            url = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}02/gamelog/2024#pgl_basic"
-            table24 = pd.read_html(url)
-            game24=table24[7]
+    gamelog = playergamelog.PlayerGameLog(player_id=player_id, season='2024-25')
+    df = gamelog.get_data_frames()[0]
 
-            games = pd.concat([game24, game25], axis=0).reset_index(drop=True)
-            games = games.iloc[::-1].reset_index(drop=True)
+    gamelog2 = playergamelog.PlayerGameLog(player_id=player_id, season='2023-24')
+    df2 = gamelog2.get_data_frames()[0]
 
-        except:
-            games = game25
-        
-        finally:
-            games = games.loc[:, ['Date', 'Tm', 'Opp', 'Unnamed: 7', 'PTS', 'AST','TRB', 'BLK', 'STL', '+/-', 
-                        'FG', 'FGA', 'FG%', '3P', '3PA', '3P%', 'FT', 'FTA', 'FT%']]
+    # merge this year + last year
+    games = pd.concat([df2, df], axis=0)
+    games = games.iloc[::-1].reset_index(drop=True)
 
-            games.rename(columns={'Unnamed: 7': 'Result'}, inplace=True)
-            games = games[~games.isin(['Inactive','Did Not Play','Did Not Dress','PTS','Not With Team']).any(axis=1)]
+    # only keep the columns i want
+    games = games.loc[:, ['GAME_DATE', 'MATCHUP', 'WL', 'MIN', 'PTS', 'AST','REB', 'BLK', 'STL', 'TOV', 'PLUS_MINUS', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT']]
+    games['GAME_DATE'] = games['GAME_DATE'].str.replace(',', '', regex=False)
+    # print(games)
 
+
+    # webscrape bball reference for image and accolades, and name (with correct capitalization)
+    first = name.split(" ")[0].lower()
+    last = name.split(" ")[1].lower()
+    
+    url = f"https://www.basketball-reference.com/players/{last[0]}/{last[0:5]}{first[0:2]}01/gamelog/2025#pgl_basic"
 
     response = requests.get(url)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-        
-        img_tag = soup.find_all('img')
-        name = soup.find('h1')
+        if soup.find_all('li', class_=['poptip', 'all_star']):
+            img_tag = soup.find_all('img')
+            name = soup.find('h1')
 
-        accolades = ""
-    for li in soup.find_all('li', class_=['poptip', 'all_star']):
-        accolades += li.get_text(strip=True) + ", "
-    accolades = accolades[:-2]
+            accolades = ""
+            for li in soup.find_all('li', class_=['poptip', 'all_star']):
+                accolades += li.get_text(strip=True) + ", "
+            accolades = accolades[:-2]
+        else:
+            name = name
+            img_tag=['','']
+            accolades = ''
     
     return games, img_tag[1], name, accolades
 
 def averages(game):
     points = pd.to_numeric(game['PTS'], errors='coerce').mean()
     assists = pd.to_numeric(game['AST'], errors='coerce').mean()
-    rebounds = pd.to_numeric(game['TRB'], errors='coerce').mean()
+    rebounds = pd.to_numeric(game['REB'], errors='coerce').mean()
     blocks = pd.to_numeric(game['BLK'], errors='coerce').mean()
     steals = pd.to_numeric(game['STL'], errors='coerce').mean()
 
@@ -106,47 +98,39 @@ def averages(game):
 
     return average
 
-def prediction(game, targets=['PTS', 'TRB', 'AST', 'BLK', 'STL']):
+def prediction(game, targets=['PTS', 'REB', 'AST', 'BLK', 'STL']):
     from sklearn.model_selection import train_test_split
     from sklearn.linear_model import LinearRegression
     from sklearn.metrics import mean_squared_error
 
-    # Step 1: Prepare the data by creating lag features
     game['Prev_PTS'] = game['PTS'].shift(1)
     game['Prev_AST'] = game['AST'].shift(1)
-    game['Prev_TRB'] = game['TRB'].shift(1)
+    game['Prev_TRB'] = game['REB'].shift(1)
     game['Prev_BLK'] = game['BLK'].shift(1)
     game['Prev_STL'] = game['STL'].shift(1)
     
-    # Drop rows where lag values are NaN (first row will have NaN for lag features)
     game = game.dropna(subset=['Prev_PTS', 'Prev_AST', 'Prev_TRB', 'Prev_BLK', 'Prev_STL'])
     
-    # Step 2: Define the feature variables (X)
-    X = game[['Prev_PTS', 'Prev_AST', 'Prev_TRB', 'Prev_BLK', 'Prev_STL']]  # Features
+    X = game[['Prev_PTS', 'Prev_AST', 'Prev_TRB', 'Prev_BLK', 'Prev_STL']]
 
     predictions = []
     
-    # Step 3: Iterate over each target and train a model for it
     for target in targets:
-        y = game[target]  # Target (we're predicting multiple variables)
+        y = game[target]
         
-        # Step 4: Split the data into training and testing sets
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8, shuffle=False)
         
-        # Step 5: Initialize and train the model
         model = LinearRegression()
         model.fit(X_train, y_train)
         
-        # Step 6: Make predictions on the test set
         y_pred = model.predict(X_test)
         
-        # Step 8: Make a prediction for the next game
-        next_game_features = X_test.iloc[-1].values.reshape(1, -1)  # Get the features of the last row in the test set
+        next_game_features = X_test.iloc[-1].values.reshape(1, -1)
         predicted_value = model.predict(next_game_features)
         
         predictions.append(target + ': ' +str(round(predicted_value[0])))
 
-    return predictions  # Return all predictions as a dictionary
+    return predictions
 
 
 
