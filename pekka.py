@@ -3,6 +3,10 @@ from flask_cors import CORS
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
+import xgboost as xgb
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+
 
 app = Flask(__name__)
 CORS(app)
@@ -53,8 +57,7 @@ def games(name):
     df2 = gamelog2.get_data_frames()[0]
 
     # merge this year + last year
-    games = pd.concat([df2, df], axis=0)
-    games = games.iloc[::-1].reset_index(drop=True)
+    games = pd.concat([df, df2], axis=0)
 
     # only keep the columns i want
     games = games.loc[:, ['GAME_DATE', 'MATCHUP', 'WL', 'MIN', 'PTS', 'AST','REB', 'BLK', 'STL', 'TOV', 'PLUS_MINUS', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT']]
@@ -70,22 +73,17 @@ def games(name):
 
     response = requests.get(url)
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
-        if soup.find_all('li', class_=['poptip', 'all_star']):
-            img_tag = soup.find_all('img')
-            name = soup.find('h1')
+    soup = BeautifulSoup(response.text, 'html.parser')
+    img_tag = f"<img src='https://cdn.nba.com/headshots/nba/latest/1040x760/{player_id}.png'>"
+    name = name.title()
 
-            accolades = ""
-            for li in soup.find_all('li', class_=['poptip', 'all_star']):
-                accolades += li.get_text(strip=True) + ", "
-            accolades = accolades[:-2]
-        else:
-            name = name
-            img_tag=['','']
-            accolades = ''
+    accolades = ""
+    for li in soup.find_all('li', class_=['poptip', 'all_star']):
+        accolades += li.get_text(strip=True) + ", "
+    accolades = accolades[:-2]
+
     
-    return games, img_tag[1], name, accolades
+    return games, img_tag, name, accolades
 
 def averages(game):
     points = pd.to_numeric(game['PTS'], errors='coerce').mean()
@@ -98,39 +96,38 @@ def averages(game):
 
     return average
 
-def prediction(game, targets=['PTS', 'REB', 'AST', 'BLK', 'STL']):
-    from sklearn.model_selection import train_test_split
-    from sklearn.linear_model import LinearRegression
-    from sklearn.metrics import mean_squared_error
+def prediction(game):
+    game = game.copy()
+    game['MATCHUP'] = LabelEncoder().fit_transform(game['MATCHUP'])
+    game['WL'] = LabelEncoder().fit_transform(game['WL'])
 
-    game['Prev_PTS'] = game['PTS'].shift(1)
-    game['Prev_AST'] = game['AST'].shift(1)
-    game['Prev_TRB'] = game['REB'].shift(1)
-    game['Prev_BLK'] = game['BLK'].shift(1)
-    game['Prev_STL'] = game['STL'].shift(1)
-    
-    game = game.dropna(subset=['Prev_PTS', 'Prev_AST', 'Prev_TRB', 'Prev_BLK', 'Prev_STL'])
-    
-    X = game[['Prev_PTS', 'Prev_AST', 'Prev_TRB', 'Prev_BLK', 'Prev_STL']]
+    for col in ['PTS', 'AST', 'REB']:
+        game[f'{col}_prev'] = game[col].shift(1)
+    game = game.dropna()
 
-    predictions = []
-    
+    features = ['MATCHUP', 'WL', 'MIN', 'PTS_prev', 'AST_prev', 'REB_prev']
+    targets = ['PTS', 'AST', 'REB']
+    models = {}
+    predictions = {}
+
+    game["MIN"] = pd.to_numeric(game["MIN"], errors="coerce")
+    game["PTS_prev"] = pd.to_numeric(game["PTS_prev"], errors="coerce")
+    game["AST_prev"] = pd.to_numeric(game["AST_prev"], errors="coerce")
+    game["REB_prev"] = pd.to_numeric(game["REB_prev"], errors="coerce")
+
+
     for target in targets:
+        X = game[features]
         y = game[target]
-        
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8, shuffle=False)
-        
-        model = LinearRegression()
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+        model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators=100, learning_rate=0.1)
         model.fit(X_train, y_train)
-        
-        y_pred = model.predict(X_test)
-        
-        next_game_features = X_test.iloc[-1].values.reshape(1, -1)
-        predicted_value = model.predict(next_game_features)
-        
-        predictions.append(target + ': ' +str(round(predicted_value[0])))
+        models[target] = model
 
-    return predictions
+        next_game_features = X.iloc[-1].values.reshape(1, -1)
+        predictions[target] = round(models[target].predict(next_game_features)[0])
+
+    return [f"PTS: {predictions['PTS']}", f"REB: {predictions['REB']}", f"AST: {predictions['AST']}"]
 
 
 
