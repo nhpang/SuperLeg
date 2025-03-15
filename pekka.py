@@ -153,7 +153,7 @@ def getPastGames():
 
         game.update({'Title': row[1]['homeTeam_teamName'] + ' vs ' + row[1]['awayTeam_teamName']})
         game.update({'Game Score': str(row[1]['homeTeam_score']) +' - ' + str(row[1]['awayTeam_score'])})
-        game.update({'Status': status})
+        game.update({'Status': row[1]['gameStatusText']})
         game.update({'Start Time': row[1]['gameDateTimeEst']})
         game.update({'GameID': row[1]['gameId']})
         game.update({'hometeamTricode': hometri})
