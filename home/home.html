@@ -11,7 +11,7 @@
   <body>
     <div class="title">
 
-      <img id="randomPhoto" width="120">
+      <img id="randomPhoto" src = nathan.jpg height="120">
     
       <script>
           const images = [
@@ -29,8 +29,6 @@
           ];
 
           const randomImage = images[Math.floor(Math.random() * images.length)];
-
-          document.getElementById("randomPhoto").src = randomImage;
 
           document.getElementById("randomPhoto").addEventListener("click", function(){
             let randomImage = images[Math.floor(Math.random() * images.length)];
@@ -59,7 +57,7 @@
 
       <div class="apps">
         <div class="appcover">
-          <a href="../about/main.html"><img src="nathan.jpg" width="100%" height="100%"></a>
+          <a href="../about/main.html"><img src="./photos/bashscript.JPG" width="100%" height="100%"></a>
         </div>
         <a href="../about/main.html">About Me</a>
       </div>
