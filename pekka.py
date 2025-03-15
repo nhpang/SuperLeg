@@ -152,7 +152,7 @@ def getPastGames():
             hometri = row[1]['awayTeam_teamTricode']
 
         if (row[1]['gameStatusText'])[-2:] == 'ET':
-            status = " N/A"
+            status = " Starting Soon..."
         else:
             status = row[1]['gameStatusText']
 
