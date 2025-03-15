@@ -69,6 +69,7 @@ function populate(fetchedData){
   for (let i of fetchedData['prediction']) {
     predictions.innerHTML += '<h2>'+i+'</h2>';
   }
+  
   function createCSVTable(fetchedData) {
     const table = document.getElementById('csv-table');
 

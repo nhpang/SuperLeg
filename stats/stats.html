@@ -39,11 +39,46 @@
       </div>
       <div style="display: flex; flex-direction: row; justify-content: center;">
         <div style="display: flex; flex-direction: row; align-items: center; margin-right: 20px;">
+          <!-- search bar -->
           <input
+            list="suggestions"
             style="height: 20px; margin-right: 5px;"
             id="search"
             placeholder="search nba player"
           />
+          <!-- search autofill -->
+          <datalist id="suggestions" >
+          </datalist>
+          <!-- Search Bar autofill using nba api -->
+          <script>
+            async function fetchSearchResults() {
+                try {
+                    const response = await fetch('http://localhost:420/search', {
+                        method: 'GET',
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    const searches = await response.json();
+                    console.log(searches);
+                    const autoComplete = document.querySelector('#suggestions')
+                    for(let i of searches){
+                      console.log(i)
+                      autoComplete.innerHTML += '<option value="'+i.toString()+'">'
+                    }
+                } catch (error) {
+                    console.error('Error fetching search results:', error);
+                }
+
+            }
+
+            fetchSearchResults();
+
+
+          </script>
+          <!-- search button -->
           <button style="height: 20px;" onclick="search(document.getElementById('search').value)" class="btn btn-success mb-3">
             Search
           </button>

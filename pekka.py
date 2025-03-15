@@ -36,6 +36,20 @@ def stats():
         'accolades': f'{accolades}'
     })
 
+@app.route('/search', methods=['GET'])
+def search():
+    from nba_api.stats.endpoints import commonallplayers
+    # get all players
+    players = commonallplayers.CommonAllPlayers().get_data_frames()[0]
+    # only active
+    current_players = players[players["ROSTERSTATUS"] > 0]
+    # put names into list
+    names=[]
+    for i in current_players['DISPLAY_FIRST_LAST']:
+        names.append(i)
+    # return names
+    return(names)
+
 def games(name):
     from nba_api.stats.endpoints import playergamelog
     from nba_api.stats.static import players
