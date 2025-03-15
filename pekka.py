@@ -90,7 +90,7 @@ def getTodaysGames():
             hometri = row[1]['awayTeam_teamTricode']
 
         if (row[1]['gameStatusText'])[-2:] == 'ET':
-            status = " N/A"
+            status = "Starting Soon..."
         else:
             status = row[1]['gameStatusText']
 
@@ -150,11 +150,6 @@ def getPastGames():
             hometri = 'no'
         else:
             hometri = row[1]['awayTeam_teamTricode']
-
-        if (row[1]['gameStatusText'])[-2:] == 'ET':
-            status = " Starting Soon..."
-        else:
-            status = row[1]['gameStatusText']
 
         game.update({'Title': row[1]['homeTeam_teamName'] + ' vs ' + row[1]['awayTeam_teamName']})
         game.update({'Game Score': str(row[1]['homeTeam_score']) +' - ' + str(row[1]['awayTeam_score'])})
