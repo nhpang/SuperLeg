@@ -17,7 +17,7 @@
   <div style="height: 150px;"></div>
     
   <section id="pastgamesection">
-    <h1 style="font-size: 40px;">Previous Games</h1>
+    <h1 style="font-size: 40px;">Yesterday</h1>
     <button id="pastbutton" style="height: 20px;" onclick="fetchPastSearchResults()" class="btn btn-success mb-3">
       Load Games
     </button>
@@ -27,6 +27,8 @@
     <div id = error>
       <p>Games cannot be retrieved at this moment.</p>
     </div>
+    <div id="pasttime"> </div>
+    <div id="listpastgame"> </div>
     <!-- <div class="livegame">
       <h1 class="matchup">matchup</h1>
       <p class="status">Status</p>
@@ -48,7 +50,8 @@
               const livegames = await response.json();
               console.log(livegames);
 
-              const livesection = document.querySelector('#pastgamesection')
+              const livesection = document.querySelector('#listpastgame')
+              document.querySelector('#pasttime').innerHTML += '<h2>'+livegames[0]['Start Time']+'</h2>'
 
               for(let i of livegames){
                 console.log(i)
@@ -68,6 +71,7 @@
     </script>
   </section>
 
+  
   <section id="livegamesection">
     <h1 style="font-size: 40px;">Today</h1>
     <button id="livebutton" style="height: 20px;" onclick="fetchCurrentSearchResults()" class="btn btn-success mb-3">
@@ -79,6 +83,8 @@
     <div id = error1>
       <p>Games cannot be retrieved at this moment.</p>
     </div>
+    <div id="livetime"> </div>
+    <div id="listlivegame"> </div>
     <!-- <div class="livegame">
       <h1 class="matchup">matchup</h1>
       <p class="status">Status</p>
@@ -101,7 +107,8 @@
               const livegames = await response.json();
               console.log(livegames);
 
-              const livesection = document.querySelector('#livegamesection')
+              const livesection = document.querySelector('#listlivegame')
+              document.querySelector('#livetime').innerHTML += '<h2>'+livegames[0]['Start Time']+'</h2>'
 
               for(let i of livegames){
                 console.log(i)
@@ -121,7 +128,7 @@
   </section>
 
   <section id="futuregamesection">
-    <h1 style="font-size: 40px;">Future Games</h1>
+    <h1 style="font-size: 40px;">Tomorrow</h1>
     <button id="futurebutton" style="height: 20px;" onclick="fetchFutureSearchResults()" class="btn btn-success mb-3">
       Load Games
     </button>
@@ -131,6 +138,8 @@
     <div id = error2>
       <p>Games cannot be retrieved at this moment.</p>
     </div>
+    <div id="futuretime"> </div>
+    <div id="listfuturegame"> </div>
     <!-- <div class="livegame">
       <h1 class="matchup">matchup</h1>
       <p class="status">Status</p>
@@ -152,7 +161,8 @@
               const livegames = await response.json();
               console.log(livegames);
 
-              const livesection = document.querySelector('#futuregamesection')
+              const livesection = document.querySelector('#listfuturegame')
+              document.querySelector('#futuretime').innerHTML += '<h2>'+livegames[0]['Start Time']+'</h2>'
 
               for(let i of livegames){
                 console.log(i)

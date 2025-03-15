@@ -121,7 +121,9 @@ def getPastGames():
 
     current_datetime = datetime.now()
 
-    df = df[df['gameDateTimeEst'] < current_datetime]
+    yesterday = current_datetime.date() - pd.Timedelta(days=1)
+
+    df = df[df['gameDateTimeEst'].dt.date == yesterday]
 
     df = df.sort_values(by='gameDateTimeEst')
 
@@ -179,7 +181,9 @@ def getFutureGames():
 
     current_datetime = datetime.now()
 
-    df = df[df['gameDateTimeEst'].dt.date > current_datetime.date()]
+    tomorrow = current_datetime.date() + pd.Timedelta(days=1)
+
+    df = df[df['gameDateTimeEst'].dt.date == tomorrow]
 
     df = df.sort_values(by='gameDateTimeEst')
 
