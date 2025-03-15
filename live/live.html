@@ -24,6 +24,9 @@
     <div id = pastloading style="display: none;">
       <p>Loading...</p>
     </div>
+    <div id = error>
+      <p>Games cannot be retrieved at this moment.</p>
+    </div>
     <!-- <div class="livegame">
       <h1 class="matchup">matchup</h1>
       <p class="status">Status</p>
@@ -32,6 +35,7 @@
     <script>
       async function fetchPastSearchResults() {
           document.getElementById('pastloading').style.display='block';
+          document.getElementById('error').style.display='none';
           try {
               const response = await fetch('http://localhost:420/past', {
                   method: 'GET',
@@ -50,12 +54,15 @@
                 console.log(i)
                 livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
               }
+              
+              document.getElementById('pastloading').style.display='none';
+              document.getElementById('pastbutton').style.display='none';
 
           } catch (error) {
               console.error('Error fetching search results:', error);
+              document.getElementById('error').style.display='block';
+              document.getElementById('pastloading').style.display='none';
           }
-          document.getElementById('pastloading').style.display='none';
-          document.getElementById('pastbutton').style.display='none';
 
       }
     </script>
@@ -69,6 +76,9 @@
     <div id = currentloading style="display: none;">
       <p>Loading...</p>
     </div>
+    <div id = error1>
+      <p>Games cannot be retrieved at this moment.</p>
+    </div>
     <!-- <div class="livegame">
       <h1 class="matchup">matchup</h1>
       <p class="status">Status</p>
@@ -77,6 +87,8 @@
     <script>
       async function fetchCurrentSearchResults() {
         document.getElementById('currentloading').style.display='block';
+        
+        document.getElementById('error1').style.display='none';
           try {
               const response = await fetch('http://localhost:420/today', {
                   method: 'GET',
@@ -95,12 +107,14 @@
                 console.log(i)
                 livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
               }
+              document.getElementById('currentloading').style.display='none';
+              document.getElementById('livebutton').style.display='none';
 
           } catch (error) {
               console.error('Error fetching search results:', error);
+              document.getElementById('error1').style.display='block';
+              document.getElementById('currentloading').style.display='none';
           }
-          document.getElementById('currentloading').style.display='none';
-          document.getElementById('livebutton').style.display='none';
 
       }
     </script>
@@ -114,6 +128,9 @@
     <div id = futureloading style="display: none;">
       <p>Loading...</p>
     </div>
+    <div id = error2>
+      <p>Games cannot be retrieved at this moment.</p>
+    </div>
     <!-- <div class="livegame">
       <h1 class="matchup">matchup</h1>
       <p class="status">Status</p>
@@ -122,6 +139,7 @@
     <script>
       async function fetchFutureSearchResults() {
         document.getElementById('futureloading').style.display='block';
+        document.getElementById('error2').style.display='none';
           try {
               const response = await fetch('http://localhost:420/future', {
                   method: 'GET',
@@ -140,12 +158,14 @@
                 console.log(i)
                 livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
               }
+              document.getElementById('futureloading').style.display='none';
+              document.getElementById('futurebutton').style.display='none';
 
           } catch (error) {
               console.error('Error fetching search results:', error);
+              document.getElementById('error2').style.display='block';
+              document.getElementById('futureloading').style.display='none';
           }
-          document.getElementById('futureloading').style.display='none';
-          document.getElementById('futurebutton').style.display='none';
 
       }
     </script>
