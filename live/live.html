@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hack4n</title>
+    <link href="style.css" rel="stylesheet">
+    <title>hack4n</title>
+    <link rel="icon" type="image/x-icon" href="https://i.scdn.co/image/ab67616d0000b273a875c3ec944b4f164ab5c350">
+  </head>
+  <body>
+    <div class="bar">
+      <a href="../home/home.html"><img id="randomPhoto" height="120px"></a>
+    
+      <script>
+          const images = [
+              "../home/photos/butler.jpg", 
+              "../home/photos/familyguy.jpg",
+              "../home/photos/psychocat.jpg",
+              "../home/photos/yuup.jpg",
+              "../home/photos/bashscript.jpg", 
+              "../home/photos/bronbron.png", 
+              "../home/photos/piplup.png", 
+              "../home/photos/crashdog.png", 
+              "../home/photos/funnydog.jpg",
+              "../home/photos/gof.png",
+              "../home/photos/doan.png",
+          ];
+
+          const randomImage = images[Math.floor(Math.random() * images.length)];
+
+          document.getElementById("randomPhoto").src = randomImage;
+
+          document.getElementById("randomPhoto").addEventListener("click", function(){
+            let randomImage = images[Math.floor(Math.random() * images.length)];
+            document.getElementById("randomPhoto").src = randomImage;
+          })
+      </script>
+      <a href="../home/home.html" style="color: black; text-decoration: none;"><h1 id="webtitle">Live Games and Stats</h1></a>
+  </div>
+    
+  <section id="livegamesection">
+    <h1 style="font-size: 40px;">On Now</h1>
+    <!-- <div class="livegame">
+      <h1 class="matchup">matchup</h1>
+      <p class="status">Status</p>
+      <p class="StartTime">Start Time</p>
+    </div> -->
+    <script>
+      async function fetchSearchResults() {
+          try {
+              const response = await fetch('http://localhost:420/games', {
+                  method: 'GET',
+              });
+
+              if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+
+              const livegames = await response.json();
+              console.log(livegames);
+
+              const livesection = document.querySelector('#livegamesection')
+
+              for(let i of livegames){
+                console.log(i)
+                livesection.innerHTML += '<div class="livegame"> <h1 class="matchup">'+i['Game Score']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div>'
+              }
+
+          } catch (error) {
+              console.error('Error fetching search results:', error);
+          }
+
+      }
+
+      fetchSearchResults();
+
+
+    </script>
+  </section>
+    
+  </body>
+</html>

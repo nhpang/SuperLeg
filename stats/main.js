@@ -34,6 +34,7 @@ async function search(input){
 }
 
 function populate(fetchedData){
+  document.getElementById('search').value = ''
   const image = document.querySelector('.left1');
   image.innerHTML = ''; 
 
