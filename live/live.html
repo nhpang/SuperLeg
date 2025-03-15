@@ -125,9 +125,6 @@
   
   <section id="livegamesection">
     <h1 style="font-size: 35px;">Today</h1>
-    <button id="livebutton" style="height: 20px;" onclick="fetchCurrentSearchResults()" class="btn btn-success mb-3">
-      Load Games
-    </button>
     <div id = currentloading style="display: none;">
       <p>Loading...</p>
     </div>
@@ -143,7 +140,6 @@
     </div> -->
     <script>
       async function fetchCurrentSearchResults() {
-        document.getElementById("livebutton").disabled = true;
         document.getElementById('currentloading').style.display='block';
         
         document.getElementById('error1').style.display='none';
@@ -167,15 +163,14 @@
                 livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="85px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="85px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
               }
               document.getElementById('currentloading').style.display='none';
-              document.getElementById('livebutton').style.display='none';
 
           } catch (error) {
               console.error('Error fetching search results:', error);
               document.getElementById('error1').style.display='block';
               document.getElementById('currentloading').style.display='none';
           }
-          document.getElementById("livebutton").disabled = false;
       }
+    fetchCurrentSearchResults()
     </script>
   </section>
 
