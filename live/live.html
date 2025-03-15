@@ -39,17 +39,69 @@
       <a href="../home/home.html" style="color: black; text-decoration: none;"><h1 id="webtitle">Live Games and Stats</h1></a>
   </div>
     
-  <section id="livegamesection">
-    <h1 style="font-size: 40px;">On Today</h1>
+  <section id="pastgamesection">
+    <h1 style="font-size: 40px;">Previous Games</h1>
+    <button id="pastbutton" style="height: 20px;" onclick="fetchPastSearchResults()" class="btn btn-success mb-3">
+      Load Games
+    </button>
+    <div id = pastloading style="display: none;">
+      <p>Loading...</p>
+    </div>
     <!-- <div class="livegame">
       <h1 class="matchup">matchup</h1>
       <p class="status">Status</p>
       <p class="StartTime">Start Time</p>
     </div> -->
     <script>
-      async function fetchSearchResults() {
+      async function fetchPastSearchResults() {
+          document.getElementById('pastloading').style.display='block';
           try {
-              const response = await fetch('http://localhost:420/games', {
+              const response = await fetch('http://localhost:420/past', {
+                  method: 'GET',
+              });
+
+              if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+
+              const livegames = await response.json();
+              console.log(livegames);
+
+              const livesection = document.querySelector('#pastgamesection')
+
+              for(let i of livegames){
+                console.log(i)
+                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
+              }
+
+          } catch (error) {
+              console.error('Error fetching search results:', error);
+          }
+          document.getElementById('pastloading').style.display='none';
+          document.getElementById('pastbutton').style.display='none';
+
+      }
+    </script>
+  </section>
+
+  <section id="livegamesection">
+    <h1 style="font-size: 40px;">Today</h1>
+    <button id="livebutton" style="height: 20px;" onclick="fetchCurrentSearchResults()" class="btn btn-success mb-3">
+      Load Games
+    </button>
+    <div id = currentloading style="display: none;">
+      <p>Loading...</p>
+    </div>
+    <!-- <div class="livegame">
+      <h1 class="matchup">matchup</h1>
+      <p class="status">Status</p>
+      <p class="StartTime">Start Time</p>
+    </div> -->
+    <script>
+      async function fetchCurrentSearchResults() {
+        document.getElementById('currentloading').style.display='block';
+          try {
+              const response = await fetch('http://localhost:420/today', {
                   method: 'GET',
               });
 
@@ -64,18 +116,61 @@
 
               for(let i of livegames){
                 console.log(i)
-                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> </div> </div>'
+                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
               }
 
           } catch (error) {
               console.error('Error fetching search results:', error);
           }
+          document.getElementById('currentloading').style.display='none';
+          document.getElementById('livebutton').style.display='none';
 
       }
+    </script>
+  </section>
 
-      fetchSearchResults();
+  <section id="futuregamesection">
+    <h1 style="font-size: 40px;">Future Games</h1>
+    <button id="futurebutton" style="height: 20px;" onclick="fetchFutureSearchResults()" class="btn btn-success mb-3">
+      Load Games
+    </button>
+    <div id = futureloading style="display: none;">
+      <p>Loading...</p>
+    </div>
+    <!-- <div class="livegame">
+      <h1 class="matchup">matchup</h1>
+      <p class="status">Status</p>
+      <p class="StartTime">Start Time</p>
+    </div> -->
+    <script>
+      async function fetchFutureSearchResults() {
+        document.getElementById('futureloading').style.display='block';
+          try {
+              const response = await fetch('http://localhost:420/future', {
+                  method: 'GET',
+              });
 
+              if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+              }
 
+              const livegames = await response.json();
+              console.log(livegames);
+
+              const livesection = document.querySelector('#futuregamesection')
+
+              for(let i of livegames){
+                console.log(i)
+                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
+              }
+
+          } catch (error) {
+              console.error('Error fetching search results:', error);
+          }
+          document.getElementById('futureloading').style.display='none';
+          document.getElementById('futurebutton').style.display='none';
+
+      }
     </script>
   </section>
     
