@@ -7,12 +7,14 @@ body {
 }
 
 .bar{
+    position: fixed;
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: row;
     background-color: white;
     height: 150px;
-    width: 98%;
-    position: fixed;
+    width: 100%;
     align-items: center;
     border: 3px solid black;
 }
@@ -37,12 +39,6 @@ section{
     flex-wrap: wrap;
 }
 
-#listpastgame{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
 #listfuturegame{
     display: flex;
     flex-direction: row;
@@ -50,8 +46,8 @@ section{
 }
 
 .livegame{
-    width: 30%;
-    height: 150px;
+    width: 26%;
+    height: 120px;
     background-color: white;
     margin-top: 50px;
     border-radius: 25px;

@@ -114,20 +114,24 @@ def getPastGames():
     games = scheduleleaguev2.ScheduleLeagueV2()
 
     df = games.get_data_frames()[0]
-    df =df.loc[:, ['gameDateTimeEst', 'gameId', 'homeTeam_teamName', 'homeTeam_score', 'awayTeam_teamName', 'awayTeam_score', 'gameStatusText', 'homeTeam_teamTricode', 'awayTeam_teamTricode']]
+
+    # good format
     df['gameDateTimeEst'] = pd.to_datetime(df['gameDateTimeEst'], format='%Y-%m-%dT%H:%M:%SZ')
-
+    print(df['gameDateTimeEst'])
+    # timezone to van
     df['gameDateTimeEst'] = df['gameDateTimeEst'] - timedelta(hours=3)
-
-    current_datetime = datetime.now()
-
-    yesterday = current_datetime.date() - pd.Timedelta(days=1)
-
-    df = df[df['gameDateTimeEst'].dt.date == yesterday]
-
+    # get get request date
+    current_datetime = datetime.strptime(request.args['date'][:-1], "%Y-%m-%d %H:%M:%S")
+    print(current_datetime)
+    # get the day before that request day
+    yesterday = current_datetime - pd.Timedelta(days=1)
+    # limit df to that request day
+    df = df[df['gameDateTimeEst'].dt.date == yesterday.date()]
+    # limit columns to relevant
+    df =df.loc[:, ['gameDateTimeEst', 'gameId', 'homeTeam_teamName', 'homeTeam_score', 'awayTeam_teamName', 'awayTeam_score', 'gameStatusText', 'homeTeam_teamTricode', 'awayTeam_teamTricode']]
+    # sort entries by date
     df = df.sort_values(by='gameDateTimeEst')
 
-    df = df.tail(20)
     games_list = []
 
     for row in df.iterrows():
@@ -169,25 +173,27 @@ def getFutureGames():
     
     from nba_api.stats.endpoints import scheduleleaguev2
     from datetime import datetime, timedelta
-
     games = scheduleleaguev2.ScheduleLeagueV2()
 
     df = games.get_data_frames()[0]
 
-    df =df.loc[:, ['gameDateTimeEst', 'gameId', 'homeTeam_teamName', 'homeTeam_score', 'awayTeam_teamName', 'awayTeam_score', 'gameStatusText', 'homeTeam_teamTricode', 'awayTeam_teamTricode']]
+    # good format
     df['gameDateTimeEst'] = pd.to_datetime(df['gameDateTimeEst'], format='%Y-%m-%dT%H:%M:%SZ')
-
+    print(df['gameDateTimeEst'])
+    # timezone to van
     df['gameDateTimeEst'] = df['gameDateTimeEst'] - timedelta(hours=3)
-
-    current_datetime = datetime.now()
-
-    tomorrow = current_datetime.date() + pd.Timedelta(days=1)
-
-    df = df[df['gameDateTimeEst'].dt.date == tomorrow]
-
+    # get get request date
+    current_datetime = datetime.strptime(request.args['date'][:-1], "%Y-%m-%d %H:%M:%S")
+    print(current_datetime)
+    # get the day before that request day
+    tomorrow = current_datetime + pd.Timedelta(days=1)
+    # limit df to that request day
+    df = df[df['gameDateTimeEst'].dt.date == tomorrow.date()]
+    # limit columns to relevant
+    df =df.loc[:, ['gameDateTimeEst', 'gameId', 'homeTeam_teamName', 'homeTeam_score', 'awayTeam_teamName', 'awayTeam_score', 'gameStatusText', 'homeTeam_teamTricode', 'awayTeam_teamTricode']]
+    # sort entries by date
     df = df.sort_values(by='gameDateTimeEst')
 
-    df = df.head(20)
     games_list = []
 
     for row in df.iterrows():

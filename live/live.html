@@ -17,29 +17,49 @@
   <div style="height: 150px;"></div>
     
   <section id="pastgamesection">
-    <h1 style="font-size: 40px;">Yesterday</h1>
+    <!-- title -->
+    <h1 style="font-size: 35px;">Previous Games</h1>
+    <!-- load button -->
     <button id="pastbutton" style="height: 20px;" onclick="fetchPastSearchResults()" class="btn btn-success mb-3">
       Load Games
     </button>
+    <!-- loading text -->
     <div id = pastloading style="display: none;">
       <p>Loading...</p>
     </div>
+    <!-- error text -->
     <div id = error>
       <p>Games cannot be retrieved at this moment.</p>
     </div>
-    <div id="pasttime"> </div>
-    <div id="listpastgame"> </div>
-    <!-- <div class="livegame">
-      <h1 class="matchup">matchup</h1>
-      <p class="status">Status</p>
-      <p class="StartTime">Start Time</p>
-    </div> -->
     <script>
+      // set day as today
+      var day = new Date();
+      var today = day.getFullYear() + "-" +
+          String(day.getMonth() + 1).padStart(2, "0") + "-" +
+          String(day.getDate()).padStart(2, "0") + " " +
+          String(day.getHours()).padStart(2, "0") + ":" +
+          String(day.getMinutes()).padStart(2, "0") + ":" +
+          String(day.getSeconds()).padStart(2, "0");
+
+      var counter = 1
+
+      localStorage.setItem("date", today);
+      localStorage.setItem("counter", counter);
+
+      // function
       async function fetchPastSearchResults() {
+        document.getElementById("pastbutton").disabled = true;
+        // get the day
+          const previewdate = localStorage.getItem("date");
+          const index = localStorage.getItem("counter");
+
+          // loading, remove error text
           document.getElementById('pastloading').style.display='block';
           document.getElementById('error').style.display='none';
+
+          // get data
           try {
-              const response = await fetch('http://localhost:420/past', {
+              const response = await fetch('http://localhost:420/past?date='+previewdate+'}', {
                   method: 'GET',
               });
 
@@ -50,30 +70,61 @@
               const livegames = await response.json();
               console.log(livegames);
 
-              const livesection = document.querySelector('#listpastgame')
-              document.querySelector('#pasttime').innerHTML += '<h2>'+livegames[0]['Start Time']+'</h2>'
+              // add area for time n game
+              var newTimeDiv = document.createElement('div');
+              newTimeDiv.id = 'time' + index;
 
+              var newListDiv = document.createElement('div');
+              newListDiv.id = 'list' + index;
+              newListDiv.style.cssText = "display: flex; flex-direction: row; flex-wrap: wrap;";
+
+              var errorDiv = document.querySelector('#error');
+
+              errorDiv.insertAdjacentElement('afterend', newListDiv);
+              errorDiv.insertAdjacentElement('afterend', newTimeDiv);
+
+              // add start time
+              document.querySelector('#time'+index+'').innerHTML += '<h2>'+livegames[0]['Start Time']+'</h2>'
+
+              // for every game add game
+              const livesection = document.querySelector('#list'+index+'')
               for(let i of livegames){
                 console.log(i)
-                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
+                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="85px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="85px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
               }
               
+              // remove loading
               document.getElementById('pastloading').style.display='none';
-              document.getElementById('pastbutton').style.display='none';
+
+              // set day to yesterday
+              var day = new Date(previewdate)
+
+              day.setDate(day.getDate() - 1);
+
+              var today = day.getFullYear() + "-" +
+                  String(day.getMonth() + 1).padStart(2, "0") + "-" +
+                  String(day.getDate()).padStart(2, "0") + " " +
+                  String(day.getHours()).padStart(2, "0") + ":" +
+                  String(day.getMinutes()).padStart(2, "0") + ":" +
+                  String(day.getSeconds()).padStart(2, "0");
+              console.log(today)
+
+              localStorage.setItem("date", today);
+              localStorage.setItem("counter", index+1);
 
           } catch (error) {
               console.error('Error fetching search results:', error);
               document.getElementById('error').style.display='block';
               document.getElementById('pastloading').style.display='none';
           }
-
+          document.getElementById("pastbutton").disabled = false;
       }
     </script>
   </section>
 
   
   <section id="livegamesection">
-    <h1 style="font-size: 40px;">Today</h1>
+    <h1 style="font-size: 35px;">Today</h1>
     <button id="livebutton" style="height: 20px;" onclick="fetchCurrentSearchResults()" class="btn btn-success mb-3">
       Load Games
     </button>
@@ -92,6 +143,7 @@
     </div> -->
     <script>
       async function fetchCurrentSearchResults() {
+        document.getElementById("livebutton").disabled = true;
         document.getElementById('currentloading').style.display='block';
         
         document.getElementById('error1').style.display='none';
@@ -112,7 +164,7 @@
 
               for(let i of livegames){
                 console.log(i)
-                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
+                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="85px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="85px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
               }
               document.getElementById('currentloading').style.display='none';
               document.getElementById('livebutton').style.display='none';
@@ -122,35 +174,55 @@
               document.getElementById('error1').style.display='block';
               document.getElementById('currentloading').style.display='none';
           }
-
+          document.getElementById("livebutton").disabled = false;
       }
     </script>
   </section>
 
   <section id="futuregamesection">
-    <h1 style="font-size: 40px;">Tomorrow</h1>
+    <!-- title -->
+    <h1 style="font-size: 35px;">Upcoming Games</h1>
+    <!-- load button -->
     <button id="futurebutton" style="height: 20px;" onclick="fetchFutureSearchResults()" class="btn btn-success mb-3">
       Load Games
     </button>
+    <!-- loading text -->
     <div id = futureloading style="display: none;">
       <p>Loading...</p>
     </div>
+    <!-- error text -->
     <div id = error2>
       <p>Games cannot be retrieved at this moment.</p>
     </div>
+
     <div id="futuretime"> </div>
     <div id="listfuturegame"> </div>
-    <!-- <div class="livegame">
-      <h1 class="matchup">matchup</h1>
-      <p class="status">Status</p>
-      <p class="StartTime">Start Time</p>
-    </div> -->
     <script>
+      // set day as today
+      var day = new Date();
+      var today = day.getFullYear() + "-" +
+          String(day.getMonth() + 1).padStart(2, "0") + "-" +
+          String(day.getDate()).padStart(2, "0") + " " +
+          String(day.getHours()).padStart(2, "0") + ":" +
+          String(day.getMinutes()).padStart(2, "0") + ":" +
+          String(day.getSeconds()).padStart(2, "0");
+
+      var counter = 1
+
+      localStorage.setItem("date1", today);
+      localStorage.setItem("counter1", counter);
+
+      // function
       async function fetchFutureSearchResults() {
+        document.getElementById("futurebutton").disabled = true;
+        // get the day
+        const previewdate = localStorage.getItem("date1");
+        const index = localStorage.getItem("counter1");
+
         document.getElementById('futureloading').style.display='block';
         document.getElementById('error2').style.display='none';
-          try {
-              const response = await fetch('http://localhost:420/future', {
+        try {
+              const response = await fetch('http://localhost:420/future?date='+previewdate+'}', {
                   method: 'GET',
               });
 
@@ -161,22 +233,55 @@
               const livegames = await response.json();
               console.log(livegames);
 
-              const livesection = document.querySelector('#listfuturegame')
-              document.querySelector('#futuretime').innerHTML += '<h2>'+livegames[0]['Start Time']+'</h2>'
+              // add area for time n game
+              document.querySelector('#futuregamesection').innerHTML += '<div id="time1'+index+'"> </div><div id="list1'+index+'" style="display: flex; flex-direction: row; flex-wrap: wrap;"> </div>'
+              var newTimeDiv = document.createElement('div');
+              newTimeDiv.id = 'time1' + index;
 
+              var newListDiv = document.createElement('div');
+              newListDiv.id = 'list1' + index;
+              newListDiv.style.cssText = "display: flex; flex-direction: row; flex-wrap: wrap;margin-bottom: 20px;";
+
+              var buttonDiv = document.querySelector('#futurebutton');
+
+              buttonDiv.insertAdjacentElement('beforebegin', newTimeDiv);
+              buttonDiv.insertAdjacentElement('beforebegin', newListDiv);
+
+              // add start time
+              document.querySelector('#time1'+index+'').innerHTML += '<h2>'+livegames[0]['Start Time']+'</h2>'
+
+              // for every game add game
+              const livesection = document.querySelector('#list1'+index+'')
               for(let i of livegames){
                 console.log(i)
-                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
+                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="85px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="85px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> </div> </div>'
               }
+              
+              // remove loading
               document.getElementById('futureloading').style.display='none';
-              document.getElementById('futurebutton').style.display='none';
+
+              // set day to yesterday
+              var day = new Date(previewdate)
+
+              day.setDate(day.getDate() + 1);
+
+              var today = day.getFullYear() + "-" +
+                  String(day.getMonth() + 1).padStart(2, "0") + "-" +
+                  String(day.getDate()).padStart(2, "0") + " " +
+                  String(day.getHours()).padStart(2, "0") + ":" +
+                  String(day.getMinutes()).padStart(2, "0") + ":" +
+                  String(day.getSeconds()).padStart(2, "0");
+              console.log(today)
+
+              localStorage.setItem("date1", today);
+              localStorage.setItem("counter1", index+1);
 
           } catch (error) {
               console.error('Error fetching search results:', error);
               document.getElementById('error2').style.display='block';
               document.getElementById('futureloading').style.display='none';
           }
-
+          document.getElementById("futurebutton").disabled = false;
       }
     </script>
   </section>
