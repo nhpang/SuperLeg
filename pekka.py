@@ -59,8 +59,8 @@ def getLiveUpcomingGames():
 
     # json
     games = games.get_dict()
-
     from datetime import datetime
+    import pytz
 
     games_list = []
 
@@ -76,16 +76,42 @@ def getLiveUpcomingGames():
         for quarter in i['awayTeam']['periods']:
             away_score += quarter['score']
 
-        gamescore = i['homeTeam']['teamName'] + ' ' + str(home_score) +' - ' + i['awayTeam']['teamName'] + ' ' + str(away_score)
+        gamescore = str(home_score) +' - ' + str(away_score)
+        title = i['homeTeam']['teamName'] + ' vs ' + i['awayTeam']['teamName'] 
 
+        if i['awayTeam']['teamTricode'] == 'UTA':
+            awaytri = 'utah'
+        else:
+            awaytri = i['awayTeam']['teamTricode']
+
+        if i['homeTeam']['teamTricode'] == 'UTA':
+            hometri = 'utah'
+        else:
+            hometri = i['homeTeam']['teamTricode']
+
+        game_time = i['gameTimeUTC']
+        utc_time = datetime.strptime(game_time, "%Y-%m-%dT%H:%M:%SZ")
+
+        utc_zone = pytz.utc
+        gmt7_zone = pytz.timezone("America/Phoenix")
+        utc_time = utc_zone.localize(utc_time)
+        gmt7_time = utc_time.astimezone(gmt7_zone)
+
+        game_time = gmt7_time.strftime("%Y-%m-%d %I:%M %p")
+
+        game.update({'Title': title})
         game.update({'Game Score': gamescore})
         game.update({'Status': i['gameStatusText']})
-        game.update({'Start Time': i['gameTimeUTC']})
+        game.update({'Start Time': game_time})
+        game.update({'GameID': i['gameId']})
+        game.update({'hometeamTricode': hometri})
+        game.update({'awayteamTricode': awaytri})
 
         games_list.append(game)
 
     # sort my start time
-    games_list.sort(key=lambda x: datetime.fromisoformat(x['Start Time']))
+    from datetime import datetime
+    games_list.sort(key=lambda x: datetime.strptime(x['Start Time'], "%Y-%m-%d %I:%M %p"))
 
     return games_list
 

@@ -33,4 +33,8 @@ section{
     margin-top: 50px;
     border-radius: 25px;
     padding: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }

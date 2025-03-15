@@ -40,7 +40,7 @@
   </div>
     
   <section id="livegamesection">
-    <h1 style="font-size: 40px;">On Now</h1>
+    <h1 style="font-size: 40px;">On Today</h1>
     <!-- <div class="livegame">
       <h1 class="matchup">matchup</h1>
       <p class="status">Status</p>
@@ -64,7 +64,7 @@
 
               for(let i of livegames){
                 console.log(i)
-                livesection.innerHTML += '<div class="livegame"> <h1 class="matchup">'+i['Game Score']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div>'
+                livesection.innerHTML += '<div class="livegame"> <div> <h1 class="matchup">'+i['Title']+'</h1> <p class="status">'+i['Status']+'</p> <p class="StartTime">'+i['Start Time']+'</p> </div> <div style="display: flex; flex-direction: row; align-items: center"> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['hometeamTricode']+'.png&h=200&w=200"> <h1 style="font-size: 30px;">'+i['Game Score']+'</h1> <img height="120px" src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/'+i['awayteamTricode']+'.png&h=200&w=200"> </div> </div>'
               }
 
           } catch (error) {
