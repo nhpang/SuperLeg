@@ -30,7 +30,7 @@ section{
     padding-left: 50px;
     border-radius: 25px;
     margin-top: 15px;
-    width: 70%;
+    width: 85%;
 }
 
 #listlivegame{
@@ -46,10 +46,10 @@ section{
 }
 
 .livegame{
-    width: 470px;
+    width: 570px;
     height: 100px;
     background-color: white;
-    margin-top: 50px;
+    margin-top: 50px; 
     border-radius: 25px;
     padding: 25px;
     display: flex;

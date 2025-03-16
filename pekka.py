@@ -52,58 +52,63 @@ def search():
 
 @app.route('/today', methods=['GET'])
 def getTodaysGames():
-    from nba_api.stats.endpoints import scheduleleaguev2
-    from datetime import datetime, timedelta
-    games = scheduleleaguev2.ScheduleLeagueV2()
+    from nba_api.live.nba.endpoints import scoreboard
+ 
+    # Today's Score Board
+    games = scoreboard.ScoreBoard()
 
-    df = games.get_data_frames()[0]
+    # json
+    games = games.get_dict()
 
-    df =df.loc[:, ['gameDateTimeEst', 'gameId', 'homeTeam_teamName', 'homeTeam_score', 'awayTeam_teamName', 'awayTeam_score', 'gameStatusText', 'homeTeam_teamTricode', 'awayTeam_teamTricode']]
-    df['gameDateTimeEst'] = pd.to_datetime(df['gameDateTimeEst'], format='%Y-%m-%dT%H:%M:%SZ')
+    from datetime import datetime
 
-    df['gameDateTimeEst'] = df['gameDateTimeEst'] - timedelta(hours=3)
-
-    current_datetime = datetime.now()
-
-    df = df[df['gameDateTimeEst'].dt.date == current_datetime.date()]
-
-    df = df.sort_values(by='gameDateTimeEst')
-
-    df = df.head(20)
     games_list = []
 
-    for row in df.iterrows():
+    for i in games['scoreboard']['games']:
+        # print(i)
+
         game = {}
 
-        if row[1]['homeTeam_teamTricode'] == 'UTA':
+        # get each team score by adding each periods points
+        home_score = 0
+        for quarter in i['homeTeam']['periods']:
+            home_score += quarter['score']
+        away_score = 0
+        for quarter in i['awayTeam']['periods']:
+            away_score += quarter['score']
+
+        if i['homeTeam']['teamTricode'] == 'UTA':
             awaytri = 'utah'
-        elif row[1]['homeTeam_teamTricode'] == 'NOP':
+        elif i['homeTeam']['teamTricode'] == 'NOP':
             awaytri = 'no'
         else:
-            awaytri = row[1]['homeTeam_teamTricode']
+            awaytri = i['homeTeam']['teamTricode']
 
-        if row[1]['awayTeam_teamTricode'] == 'UTA':
+        if i['awayTeam']['teamTricode'] == 'UTA':
             hometri = 'utah'
-        elif row[1]['awayTeam_teamTricode'] == 'NOP':
+        elif i['awayTeam']['teamTricode'] == 'NOP':
             hometri = 'no'
         else:
-            hometri = row[1]['awayTeam_teamTricode']
+            hometri = i['awayTeam']['teamTricode']
 
-        if (row[1]['gameStatusText'])[-2:] == 'ET':
+        if (i['gameStatusText'])[-2:] == 'ET':
             status = "Starting Soon..."
         else:
-            status = row[1]['gameStatusText']
+            status = i['gameStatusText']
 
-        game.update({'Title': row[1]['homeTeam_teamName'] + ' vs ' + row[1]['awayTeam_teamName']})
-        game.update({'Game Score': str(row[1]['homeTeam_score']) +' - ' + str(row[1]['awayTeam_score'])})
-        game.update({'Status': status})
-        game.update({'Start Time': row[1]['gameDateTimeEst']})
-        game.update({'GameID': row[1]['gameId']})
+        game.update({'Title': i['homeTeam']['teamName']+ ' vs ' +i['awayTeam']['teamName']})
+        game.update({'Game Score': str(home_score) + ' - ' + str(away_score)})
+        game.update({'Status': i['gameStatusText']})
+        game.update({'Start Time': i['gameEt']})
+        game.update({'GameID': i['gameId']})
         game.update({'hometeamTricode': hometri})
         game.update({'awayteamTricode': awaytri})
 
         games_list.append(game)
-
+ 
+     # sort my start time
+    games_list.sort(key=lambda x: datetime.fromisoformat(x['Start Time']))
+ 
     return games_list
 
 @app.route('/past', methods=['GET'])
