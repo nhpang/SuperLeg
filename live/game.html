@@ -19,69 +19,71 @@
 
   <div id="title"></div>
 
-  <div id="gamestats"><p>No Game Data</p></div>
+  <div id="gamestats"><p>Loading</p></div>
 
   <script>
     // get gameID
     const urlParams = new URLSearchParams(window.location.search);
-    const gameID = urlParams.get('game');
+    const date = urlParams.get('date');
     const home = urlParams.get('home');
     const away = urlParams.get('away');
     const started = urlParams.get('start');
     
-    console.log(started)
+    console.log(date + home)
 
     async function getInfo(){
-        try {
-                const response = await fetch('http://localhost:420/game?gameID='+gameID+'&home='+home+'&away='+away, {
-                    method: 'GET',
-                });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const gamedata = await response.json();
-                console.log(gamedata);
-
-                document.querySelector('#title').innerHTML += '<h1>'+home+' vs '+away+'</h1>'
-                document.querySelector('#title').innerHTML += '<h2>'+started+'</h2>'
-                document.querySelector('#title').innerHTML += '<a target="_blank" href="'+gamedata['url']+'">'+gamedata['url']+'</a>'
+        document.querySelector('#title').innerHTML += '<h1>'+home+' vs '+away+'</h1>'
+        document.querySelector('#title').innerHTML += '<h2>'+started+'</h2>'
 
 
-                // --------------------------------- check if game stats exist ------------------------------------------
+        // --------------------------------- check if game stats exist ------------------------------------------
 
-                // if game has started, web scrape nba for game player stat data
-                if (started[0] == 'G'){
-                    document.querySelector('#gamestats').innerHTML = '<p>get game player stats through python backend /game</p>'
-                
-                // display no game data
-                } else {
-                    document.querySelector('#gamestats').innerHTML = '<p>No game data yet</p>'
-                }
-                
-                // --------------------------------- check if prediction has been made ------------------------------------------
+        // if game has started, web scrape nba for game player stat data
+        // if (started[0] == 'G'){
 
-                // 
-                // try {
-                //     const response = await fetch('http://localhost:420/prediction?gameId='+gameID, {
-                //         method: 'GET',
-                //     });
+        //     try {
+        //         const response = await fetch('http://localhost:420/game?date='+date+'&home='+home, {
+        //             method: 'GET',
+        //         });
 
-                //     if (!response.ok) {
-                //         throw new Error(`HTTP error! Status: ${response.status}`);
-                //     }
+        //         if (!response.ok) {
+        //             throw new Error(`HTTP error! Status: ${response.status}`);
+        //         }
 
-                //     const prediction = await response.json();
-                //     console.log(prediction)
-                
-                // } catch (error) {
-                //     console.error('Error fetching search results:', error);
-                // }
+        //         const gamedata = await response.json();
+        //         console.log(gamedata);
 
-            } catch (error) {
-                console.error('Error fetching search results:', error);
-            }
+        //         document.querySelector('#gamestats').innerHTML = '<p>get game player stats through python backend /game</p>'
+        //         document.querySelector('#gamestats').innerHTML += '<a href="'+gamedata['url']+'">'+gamedata['url']+'</a>'
+        //     } catch (error){
+        //         console.error('Error fetching search results:', error);
+        //         document.querySelector('#gamestats').innerHTML = '<p>Cannot retrieve game data at this moment</p>'
+        //     }
+        
+        // // display no game data
+        // } else {
+        //     document.querySelector('#gamestats').innerHTML = '<p>No game data yet</p>'
+        // }
+        
+        // --------------------------------- check if prediction has been made ------------------------------------------
+
+        // 
+        // try {
+        //     const response = await fetch('http://localhost:420/prediction?gameId='+gameID, {
+        //         method: 'GET',
+        //     });
+
+        //     if (!response.ok) {
+        //         throw new Error(`HTTP error! Status: ${response.status}`);
+        //     }
+
+        //     const prediction = await response.json();
+        //     console.log(prediction)
+        
+        // } catch (error) {
+        //     console.error('Error fetching search results:', error);
+        // }
     }
     getInfo()
         

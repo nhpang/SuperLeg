@@ -53,6 +53,7 @@ def search():
 @app.route('/today', methods=['GET'])
 def getTodaysGames():
     from nba_api.live.nba.endpoints import scoreboard
+    from datetime import datetime, timedelta
  
     # Today's Score Board
     games = scoreboard.ScoreBoard()
@@ -96,18 +97,22 @@ def getTodaysGames():
         else:
             status = i['gameStatusText']
 
+        time = i['gameEt']
+        time = datetime.strptime(time,'%Y-%m-%dT%H:%M:%SZ')
+        time = str(time - timedelta(hours=3))
+        time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+        time = time.strftime("%a, %d %b %Y %I:%M %p")
+        print((time))
+
         game.update({'Title': i['homeTeam']['teamName']+ ' vs ' +i['awayTeam']['teamName']})
         game.update({'Game Score': str(home_score) + ' - ' + str(away_score)})
         game.update({'Status': i['gameStatusText']})
-        game.update({'Start Time': i['gameEt']})
+        game.update({'Start Time': str(time)})
         game.update({'GameID': i['gameId']})
         game.update({'hometeamTricode': hometri})
         game.update({'awayteamTricode': awaytri})
 
         games_list.append(game)
- 
-     # sort my start time
-    games_list.sort(key=lambda x: datetime.fromisoformat(x['Start Time']))
  
     return games_list
 
@@ -159,7 +164,7 @@ def getPastGames():
         game.update({'Title': row[1]['homeTeam_teamName'] + ' vs ' + row[1]['awayTeam_teamName']})
         game.update({'Game Score': str(row[1]['homeTeam_score']) +' - ' + str(row[1]['awayTeam_score'])})
         game.update({'Status': row[1]['gameStatusText']})
-        game.update({'Start Time': row[1]['gameDateTimeEst']})
+        game.update({'Start Time': str((row[1]['gameDateTimeEst'].strftime("%a, %d %b %Y %I:%M %p")))})
         game.update({'GameID': row[1]['gameId']})
         game.update({'hometeamTricode': hometri})
         game.update({'awayteamTricode': awaytri})
@@ -221,7 +226,7 @@ def getFutureGames():
         game.update({'Title': row[1]['homeTeam_teamName'] + ' vs ' + row[1]['awayTeam_teamName']})
         game.update({'Game Score': str(row[1]['homeTeam_score']) +' - ' + str(row[1]['awayTeam_score'])})
         game.update({'Status': status})
-        game.update({'Start Time': row[1]['gameDateTimeEst']})
+        game.update({'Start Time': str((row[1]['gameDateTimeEst'].strftime("%a, %d %b %Y %I:%M %p")))})
         game.update({'GameID': row[1]['gameId']})
         game.update({'hometeamTricode': hometri})
         game.update({'awayteamTricode': awaytri})
@@ -232,23 +237,20 @@ def getFutureGames():
 
 @app.route('/game', methods=['GET'])
 def getGameInfo():
-    import re
-    gametitle = request.args['gameID']
     home = request.args['home']
-    away = request.args['away']
+    date = request.args['date']
+
+    date = date[:10].replace('-','')
+
+    print(date)
 
     # official nba site grab
-    url = f"https://www.nba.com/game/{home}-vs-{away}-{gametitle}/box-score#box-score"
-    response = requests.get(url)
+    url = f"https://www.basketball-reference.com/boxscores/{date}{home}.html"
+    # stats = pd.read_html(url)
+    # game25=table25[7]
+    # print(stats)
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
-        # print(soup)
-        
-        tables = soup.find_all(class_=re.compile("^StatsTable_container"))
-        print(tables)
-
-    return {'url':url,}
+    return {'url': url,}
 
 # -------------------------------------------------------------------------------------------------
 
