@@ -65,7 +65,7 @@ def getTodaysGames():
     games_list = []
 
     for i in games['scoreboard']['games']:
-        # print(i)
+        print(i)
 
         game = {}
 
@@ -229,6 +229,26 @@ def getFutureGames():
         games_list.append(game)
 
     return games_list
+
+@app.route('/game', methods=['GET'])
+def getGameInfo():
+    import re
+    gametitle = request.args['gameID']
+    home = request.args['home']
+    away = request.args['away']
+
+    # official nba site grab
+    url = f"https://www.nba.com/game/{home}-vs-{away}-{gametitle}/box-score#box-score"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        # print(soup)
+        
+        tables = soup.find_all(class_=re.compile("^StatsTable_container"))
+        print(tables)
+
+    return {'url':url,}
 
 # -------------------------------------------------------------------------------------------------
 
